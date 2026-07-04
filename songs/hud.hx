@@ -81,6 +81,8 @@ function postUpdate(delta) {
 
 function onNoteMiss(e) {
     reeval(e.note.strumTime + 10000, true);
+
+    judgeList["Miss"]++;
 }
 
 function reeval(deviation, isMiss) {
