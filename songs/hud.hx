@@ -67,7 +67,8 @@ function postUpdate(delta) {
 
     ep_accuracy.text = FlxStringUtil.formatMoney(wife.total == 0 ? 0 : wife.score / wife.total * 100) + "%";
 
-    ep_judgeStats.text = "";
+    ep_judgeStats.text = Judge.getClearType(judgeList);
+    ep_judgeStats.text += "\n";
     ep_judgeStats.text += "\nMA    " + judgeList["Marvelous"];
     ep_judgeStats.text += "\nPR    " + judgeList["Perfect"];
     ep_judgeStats.text += "\nGR    " + judgeList["Great"];
