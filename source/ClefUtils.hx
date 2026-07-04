@@ -3,6 +3,7 @@ package source;
 import funkin.backend.assets.ModsFolder;
 
 import sys.io.File;
+import sys.FileSystem;
 
 
 /**
@@ -73,6 +74,23 @@ class ClefUtils {
             for (j in ["./mods", "./addons", "./assets"]) {
                 try {
                     var question:String = File.getContent(j + "/" + i + "/" + targetPath);
+                    return question;
+                } catch (e:Exception) {
+
+                }
+            }
+        }
+	}
+
+	/**
+	* Scans through all loaded mods for a folder then returns the folder's content.
+	* Effectively just a glorified `Path.getFolderContent` but it scans through mods and addons.
+	*/
+	public static function tryGetFolderContentFromAllLoadedMods(targetPath):Null<Array<String>> {
+        for (i in ModsFolder.getLoadedMods(true)) {
+            for (j in ["./mods", "./addons", "./assets"]) {
+                try {
+                    var question:Array<String> = FileSystem.readDirectory(j + "/" + i + "/" + targetPath);
                     return question;
                 } catch (e:Exception) {
 

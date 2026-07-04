@@ -8,10 +8,22 @@ import flixel.text.FlxTextBorderStyle;
 
 import Type;
 
+using StringTools;
+
+// Etterna bullshit (which is the main point of Epoch)
 var life:Float = 50;
 var dp:Dynamic = {total: 0, current: 0, ratio: 1};
 var wife:Dynamic = {total: 0, score: 0};
+var judgeList:Map<String, Int> = [
+    "Marvelous" => 0,
+    "Perfect" => 0,
+    "Great" => 0,
+    "Good" => 0,
+    "Bad" => 0,
+    "Miss" => 0,
+    ];
 
+// HUD bullshit
 var ep_camera = ClefUtils.makeCamera(true);
 
 var ep_accuracy   = ClefUtils.makeText(16, 350 - 24, "100.00%", 32, "left", true);
@@ -21,41 +33,43 @@ var ep_songDetail = ClefUtils.makeText(16, 16, "", 16, "left", true);
 
 var ep_judgeProgress = 0;
 
-// TODO: implement color scheming
-var colorPalette:Map<String, Int> = null;
+var elements:Array<Dynamic> = [ep_accuracy, ep_judgeStats, ep_judge, ep_songDetail];
+
+var curPaletteIndex:Int = 0;
+var palettesInRotation = [ColorPalettes.getDefault()];
+var currentPalette:Map<String, Int> = null;
 
 function postCreate() {
-    colorPalette = ColorPalettes.parseFromPaletteFile("weathergirl");
+    // TODO: implement palette selection
+    // for now this will have to do
+    currentPalette = ColorPalettes.getDefault();
+
+    if (ClefUtils.tryGetFolderContentFromAllLoadedMods("palettes").length > 0) {
+        for (p in ClefUtils.tryGetFolderContentFromAllLoadedMods("palettes")) {
+            palettesInRotation.push(ColorPalettes.parseFromPaletteFile(p.substr(0, p.indexOf(".palette"))));
+        }
+    }
 
     instantiateOverlay();
 }
 
-function instantiateOverlay() {
-    for (i in [ep_accuracy, ep_judgeStats, ep_judge, ep_songDetail]) {
-        add(i).camera = ep_camera;
+function instantiateOverlay(isRepaint:Bool = false) {
+    for (i in elements) {
+        if (!isRepaint) add(i).camera = ep_camera;
 
         i.setFormat(
             Paths.font("Perfect DOS VGA 437 Win.ttf"),
             i.size,
-            colorPalette["Accent"],
+            currentPalette["Accent"],
             i.alignment
         );
 
-        i.setBorderStyle(Type.resolveEnum("flixel.text.FlxTextBorderStyle").SHADOW, colorPalette["Outline"], 1, 1);
+        i.setBorderStyle(Type.resolveEnum("flixel.text.FlxTextBorderStyle").SHADOW, currentPalette["Outline"], 1, 1);
     }
 
     ep_songDetail.text = (PlayState.SONG.meta.displayName ?? PlayState.SONG.meta.name) + "\nW3 J4 L4";
     ep_songDetail.y = ep_camera.height - 16 - ep_songDetail.height;
 }
-
-var judgeList:Map<String, Int> = [
-    "Marvelous" => 0,
-    "Perfect" => 0,
-    "Great" => 0,
-    "Good" => 0,
-    "Bad" => 0,
-    "Miss" => 0,
-    ];
 
 function onPlayerHit(e) {
     e.healthGain = 0;
@@ -67,8 +81,21 @@ function onPlayerHit(e) {
 }
 
 function postUpdate(delta) {
+    // prep for next focus
+    for (i in [scoreTxt, missesTxt, accuracyTxt]) {
+        i?.visible = false;
+    }
+
+    if (FlxG.keys.justPressed.TAB) {
+        curPaletteIndex++;
+        if (curPaletteIndex > palettesInRotation.length - 1) curPaletteIndex = 0;
+        currentPalette = palettesInRotation[curPaletteIndex];
+        instantiateOverlay(true);
+    }
+
     for (i in player.members) {
-        i.scrollSpeed = 3.5;
+        // next focus prep
+        // i.scrollSpeed = 3.5;
     }
 
     if (ep_judgeProgress < 1) ep_judgeProgress += delta * 2;
@@ -124,6 +151,11 @@ function reeval(deviation, isMiss) {
     judgeList[obj.judge]++;
 
     ep_judgeProgress = 0;
-    ep_judge.text =  obj.judge + "\n"+ FlxStringUtil.formatMoney(obj.delta) + "ms\n" + FlxStringUtil.formatMoney(wifescore / 2 * 100);
-    ep_judge.color = colorPalette["Hits_"+ obj.judge];
+    //prep for the next focus
+    ep_judge.text = "";
+    ep_judge.text += "\n" + obj.judge;
+    ep_judge.text += "\n" + FlxStringUtil.formatMoney(obj.delta) + "ms";
+    ep_judge.text += "\n" + FlxStringUtil.formatMoney(wifescore / 2 * 100) + "%";
+
+    ep_judge.color = currentPalette["Hits_"+ obj.judge];
 }
