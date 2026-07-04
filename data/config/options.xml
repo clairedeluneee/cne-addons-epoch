@@ -1,0 +1,17 @@
+<menu name="Epoch" desc="Options for Epoch.">
+    <menu name="Gameplay" desc="Change how Epoch changes gameplay.">
+        <checkbox
+            id="epoch_gameplay_life"
+            name="Life 4 Override"
+            desc="Changes health to use the Life 4 system.
+Life is an aspect of Etterna which is largely not relevant to the meta of setting scores close / above a file's MSD (93% rating or AA). Performing poorly enough to fail largely means that you're playing a file that's far out of your ability."
+        />
+        <checkbox
+            id="epoch_gameplay_wife"
+            name="Wife 3 Accuracy"
+            desc="Replaces the accuracy of the player with Epoch's implementation of Wife 3.
+Wife 3 replaces the discrete hit windows with a mathematical formula that punishes poor PA (i.e. high Great counts) and incentivises reducing hits in the Great window, as well as giving players less reason to sloppily hold onto a section than to cleanly play it with a miss.
+This is known as 'Complex Accuracy' in Kade Engine."
+        />
+    </menu>
+</menu>
