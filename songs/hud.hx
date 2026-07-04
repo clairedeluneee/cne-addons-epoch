@@ -21,11 +21,12 @@ var ep_songDetail = ClefUtils.makeText(16, 16, "", 16, "left", true);
 
 var ep_judgeProgress = 0;
 
-// TODO: implement color scheming
 var colorPalette:Map<String, Int> = null;
 
 function postCreate() {
-    colorPalette = ColorPalettes.parseFromPaletteFile("weathergirl");
+    // TODO: implement palette selection
+    // for now this will have to do
+    colorPalette = ColorPalettes.getDefault();
 
     instantiateOverlay();
 }
