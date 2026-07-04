@@ -2,7 +2,11 @@ import source.ClefUtils;
 import source.Judge;
 import source.Wife;
 import source.ColorPalettes;
+
 import flixel.util.FlxStringUtil;
+import flixel.text.FlxTextBorderStyle;
+
+import Type;
 
 var life:Float = 50;
 var dp:Dynamic = {total: 0, current: 0, ratio: 1};
@@ -21,15 +25,27 @@ var ep_judgeProgress = 0;
 var colorPalette:Map<String, Int> = null;
 
 function postCreate() {
+    colorPalette = ColorPalettes.parseFromPaletteFile("weathergirl");
+
+    instantiateOverlay();
+}
+
+function instantiateOverlay() {
     for (i in [ep_accuracy, ep_judgeStats, ep_judge, ep_songDetail]) {
-        i.font = Paths.font("Perfect DOS VGA 437 Win.ttf");
         add(i).camera = ep_camera;
+
+        i.setFormat(
+            Paths.font("Perfect DOS VGA 437 Win.ttf"),
+            i.size,
+            colorPalette["Accent"],
+            i.alignment
+        );
+
+        i.setBorderStyle(Type.resolveEnum("flixel.text.FlxTextBorderStyle").SHADOW, colorPalette["Outline"], 1, 1);
     }
 
     ep_songDetail.text = (PlayState.SONG.meta.displayName ?? PlayState.SONG.meta.name) + "\nW3 J4 L4";
     ep_songDetail.y = ep_camera.height - 16 - ep_songDetail.height;
-
-    colorPalette = ColorPalettes.getDefault();
 }
 
 var judgeList:Map<String, Int> = [
