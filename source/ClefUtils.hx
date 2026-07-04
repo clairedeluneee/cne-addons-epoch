@@ -1,5 +1,10 @@
 package source;
 
+import funkin.backend.assets.ModsFolder;
+
+import sys.io.File;
+
+
 /**
  * Various utilities Claire uses in her scripts.
  *
@@ -55,7 +60,24 @@ class ClefUtils {
 	 * @param color
 	 * @return Array<Int>
 	 */
-	function extractRgbChannels(color:Int):Array<Int> {
+	public static function extractRgbChannels(color:Int):Array<Int> {
 		return [(color >> 16 & 0xff), (color >> 8) & 0xff, color & 0xff];
+	}
+
+	/**
+	* Scans through all loaded mods for a specified file.
+	* Effectively just a glorified `Path.file` but it scans through mods and addons.
+	*/
+	public static function tryGetFileFromAllLoadedMods(targetPath):Null<String> {
+        for (i in ModsFolder.getLoadedMods(true)) {
+            for (j in ["./mods", "./addons", "./assets"]) {
+                try {
+                    var question:String = File.getContent(j + "/" + i + "/" + targetPath);
+                    return question;
+                } catch (e:Exception) {
+
+                }
+            }
+        }
 	}
 }
