@@ -8,6 +8,8 @@ import flixel.text.FlxTextBorderStyle;
 
 import Type;
 
+using StringTools;
+
 var life:Float = 50;
 var dp:Dynamic = {total: 0, current: 0, ratio: 1};
 var wife:Dynamic = {total: 0, score: 0};
@@ -21,6 +23,7 @@ var ep_songDetail = ClefUtils.makeText(16, 16, "", 16, "left", true);
 
 var ep_judgeProgress = 0;
 
+var palettesInRotation = [ColorPalettes.getDefault()];
 var colorPalette:Map<String, Int> = null;
 
 function postCreate() {
@@ -28,12 +31,18 @@ function postCreate() {
     // for now this will have to do
     colorPalette = ColorPalettes.getDefault();
 
+    if (ClefUtils.tryGetFolderContentFromAllLoadedMods("palettes").length > 0) {
+        for (p in ClefUtils.tryGetFolderContentFromAllLoadedMods("palettes")) {
+            palettesInRotation.push(ColorPalettes.parseFromPaletteFile(p.substr(0, p.indexOf(".palette"))));
+        }
+    }
+
     instantiateOverlay();
 }
 
-function instantiateOverlay() {
+function instantiateOverlay(isRepaint:Bool = false) {
     for (i in [ep_accuracy, ep_judgeStats, ep_judge, ep_songDetail]) {
-        add(i).camera = ep_camera;
+        if (!isRepaint) add(i).camera = ep_camera;
 
         i.setFormat(
             Paths.font("Perfect DOS VGA 437 Win.ttf"),
@@ -48,6 +57,7 @@ function instantiateOverlay() {
     ep_songDetail.text = (PlayState.SONG.meta.displayName ?? PlayState.SONG.meta.name) + "\nW3 J4 L4";
     ep_songDetail.y = ep_camera.height - 16 - ep_songDetail.height;
 }
+
 
 var judgeList:Map<String, Int> = [
     "Marvelous" => 0,
@@ -67,7 +77,15 @@ function onPlayerHit(e) {
     FlxG.sound.play(Paths.sound("editors/charter/hitsound"));
 }
 
+var curPaletteIndex:Int = 0;
 function postUpdate(delta) {
+    if (FlxG.keys.justPressed.TAB) {
+        curPaletteIndex++;
+        if (curPaletteIndex > palettesInRotation.length - 1) curPaletteIndex = 0;
+        colorPalette = palettesInRotation[curPaletteIndex];
+        instantiateOverlay(true);
+    }
+
     for (i in player.members) {
         i.scrollSpeed = 3.5;
     }
