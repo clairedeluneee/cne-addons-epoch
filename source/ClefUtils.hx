@@ -3,6 +3,7 @@ package source;
 import funkin.backend.assets.ModsFolder;
 
 import sys.io.File;
+import sys.FileSystem;
 
 
 /**
@@ -73,6 +74,19 @@ class ClefUtils {
             for (j in ["./mods", "./addons", "./assets"]) {
                 try {
                     var question:String = File.getContent(j + "/" + i + "/" + targetPath);
+                    return question;
+                } catch (e:Exception) {
+
+                }
+            }
+        }
+	}
+
+	public static function tryGetFolderContentFromAllLoadedMods(targetPath):Null<Array<String>> {
+        for (i in ModsFolder.getLoadedMods(true)) {
+            for (j in ["./mods", "./addons", "./assets"]) {
+                try {
+                    var question:Array<String> = FileSystem.readDirectory(j + "/" + i + "/" + targetPath);
                     return question;
                 } catch (e:Exception) {
 
