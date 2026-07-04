@@ -1,7 +1,12 @@
 import source.ClefUtils;
 import source.Judge;
 import source.Wife;
+import source.ColorPalettes;
+
 import flixel.util.FlxStringUtil;
+import flixel.text.FlxTextBorderStyle;
+
+import Type;
 
 var life:Float = 50;
 var dp:Dynamic = {total: 0, current: 0, ratio: 1};
@@ -16,10 +21,27 @@ var ep_songDetail = ClefUtils.makeText(16, 16, "", 16, "left", true);
 
 var ep_judgeProgress = 0;
 
+// TODO: implement color scheming
+var colorPalette:Map<String, Int> = null;
+
 function postCreate() {
+    colorPalette = ColorPalettes.parseFromPaletteFile("weathergirl");
+
+    instantiateOverlay();
+}
+
+function instantiateOverlay() {
     for (i in [ep_accuracy, ep_judgeStats, ep_judge, ep_songDetail]) {
-        i.font = Paths.font("Perfect DOS VGA 437 Win.ttf");
         add(i).camera = ep_camera;
+
+        i.setFormat(
+            Paths.font("Perfect DOS VGA 437 Win.ttf"),
+            i.size,
+            colorPalette["Accent"],
+            i.alignment
+        );
+
+        i.setBorderStyle(Type.resolveEnum("flixel.text.FlxTextBorderStyle").SHADOW, colorPalette["Outline"], 1, 1);
     }
 
     ep_songDetail.text = (PlayState.SONG.meta.displayName ?? PlayState.SONG.meta.name) + "\nW3 J4 L4";
@@ -80,7 +102,7 @@ function postUpdate(delta) {
     ep_judgeStats.text += "\nPA    " + FlxStringUtil.formatMoney(judgeList["Great"] > 0 ? judgeList["Perfect"] / judgeList["Great"] : 0);
 }
 
-function onNoteMiss(e) {
+function onPlayerMiss(e) {
     reeval(e.note.strumTime + 10000, true);
 
     judgeList["Miss"]++;
@@ -103,4 +125,5 @@ function reeval(deviation, isMiss) {
 
     ep_judgeProgress = 0;
     ep_judge.text =  obj.judge + "\n"+ FlxStringUtil.formatMoney(obj.delta) + "ms\n" + FlxStringUtil.formatMoney(wifescore / 2 * 100);
+    ep_judge.color = colorPalette["Hits_"+ obj.judge];
 }
