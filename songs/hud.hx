@@ -21,15 +21,18 @@ var ep_judgeStats = ClefUtils.makeText(16, 350, "", 16, "left", true);
 var ep_judge      = ClefUtils.makeText(16, 150, "", 24, "center", true);
 var ep_songDetail = ClefUtils.makeText(16, 16, "", 16, "left", true);
 
+var elements:Array<Dynamic> = [ep_accuracy, ep_judgeStats, ep_judge, ep_songDetail];
+
 var ep_judgeProgress = 0;
 
+var curPaletteIndex:Int = 0;
 var palettesInRotation = [ColorPalettes.getDefault()];
-var colorPalette:Map<String, Int> = null;
+var currentPalette:Map<String, Int> = null;
 
 function postCreate() {
     // TODO: implement palette selection
     // for now this will have to do
-    colorPalette = ColorPalettes.getDefault();
+    currentPalette = ColorPalettes.getDefault();
 
     if (ClefUtils.tryGetFolderContentFromAllLoadedMods("palettes").length > 0) {
         for (p in ClefUtils.tryGetFolderContentFromAllLoadedMods("palettes")) {
@@ -41,17 +44,17 @@ function postCreate() {
 }
 
 function instantiateOverlay(isRepaint:Bool = false) {
-    for (i in [ep_accuracy, ep_judgeStats, ep_judge, ep_songDetail]) {
+    for (i in elements) {
         if (!isRepaint) add(i).camera = ep_camera;
 
         i.setFormat(
             Paths.font("Perfect DOS VGA 437 Win.ttf"),
             i.size,
-            colorPalette["Accent"],
+            currentPalette["Accent"],
             i.alignment
         );
 
-        i.setBorderStyle(Type.resolveEnum("flixel.text.FlxTextBorderStyle").SHADOW, colorPalette["Outline"], 1, 1);
+        i.setBorderStyle(Type.resolveEnum("flixel.text.FlxTextBorderStyle").SHADOW, currentPalette["Outline"], 1, 1);
     }
 
     ep_songDetail.text = (PlayState.SONG.meta.displayName ?? PlayState.SONG.meta.name) + "\nW3 J4 L4";
@@ -77,12 +80,11 @@ function onPlayerHit(e) {
     FlxG.sound.play(Paths.sound("editors/charter/hitsound"));
 }
 
-var curPaletteIndex:Int = 0;
 function postUpdate(delta) {
     if (FlxG.keys.justPressed.TAB) {
         curPaletteIndex++;
         if (curPaletteIndex > palettesInRotation.length - 1) curPaletteIndex = 0;
-        colorPalette = palettesInRotation[curPaletteIndex];
+        currentPalette = palettesInRotation[curPaletteIndex];
         instantiateOverlay(true);
     }
 
@@ -144,5 +146,5 @@ function reeval(deviation, isMiss) {
 
     ep_judgeProgress = 0;
     ep_judge.text =  obj.judge + "\n"+ FlxStringUtil.formatMoney(obj.delta) + "ms\n" + FlxStringUtil.formatMoney(wifescore / 2 * 100);
-    ep_judge.color = colorPalette["Hits_"+ obj.judge];
+    ep_judge.color = currentPalette["Hits_"+ obj.judge];
 }
