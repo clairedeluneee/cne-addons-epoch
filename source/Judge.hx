@@ -43,10 +43,15 @@ public class Judge {
         }
     }
 
+    /**
+    Evaluates a hit based on its offset from the intended hit time.
 
-
-    public static function evaluateHit(delta:Float, judge:Int = 4):Dynamic {
+    @param offset Amount of time from the time the note is supposed to be hit.
+    @param judge Which Judge preset to use. Uses Judge 4 by default.
+    */
+    public static function evaluateHit(offset:Float, judge:Int = 4):Dynamic {
         var windows:Dynamic = getWindowsArray(judge);
+        var delta:Float = Math.abs(offset);
 
         var hitIndex:Int = -1;
 
@@ -54,7 +59,7 @@ public class Judge {
             if (Math.abs(delta) < i) hitIndex++;
         }
 
-        var theThingToReturn:Dynamic = {judge: "", wifescore: Wife.getWifescoreAt(delta), life: 0, delta: delta, dp: 0};
+        var theThingToReturn:Dynamic = {judge: "", wifescore: Wife.getWifescoreAt(delta), life: 0, delta: offset, dp: 0};
 
         switch(hitIndex) {
             case 4:
@@ -84,5 +89,35 @@ public class Judge {
         }
 
         return theThingToReturn;
+    }
+
+    /**
+    Returns a clear type based on a map with the judgements.
+    */
+    public static function getClearType(judgeList:Map<String, Int>):String {
+        var totalNotesHit:Int = 0;
+        for (key in judgeList.keys()) totalNotesHit += judgeList[key];
+
+        // No notes were hit so far.
+        if (totalNotesHit == 0) return "N/A";
+
+        // Miss checks
+        if (judgeList["Miss"] >= 10) return "Clear";
+        if (judgeList["Miss"] > 1) return "SDCB"; // Single Digit Combo Breaks.
+        if (judgeList["Miss"] == 1) return "MF"; // Miss Flag.
+
+        // FC checks
+        var theBoys:Int = judgeList["Bad"] + judgeList["Good"];
+        if (theBoys > 0 || judgeList["Great"] >= 10) return "FC"; // Full Combo.
+        if (theBoys == 0 && judgeList["Great"] > 1) return "SDG"; // Single Digit Greats.
+        if (theBoys == 0 && judgeList["Great"] == 1) return "BF"; // Black Flag.
+
+        // MFC checks
+        if (judgeList["Perfect"] >= 10) return "PFC"; // Perfect Full Combo.
+        if (judgeList["Perfect"] > 1) return "SDP"; // Single Digit Perfects.
+        if (judgeList["Perfect"] == 1) return "WF"; // White Flag.
+
+        // At this point, there should only be Marvelous hits.
+        return "MFC"; // Marvelous Full Combo
     }
 }
