@@ -26,23 +26,19 @@ var judgeList:Map<String, Int> = [
 
 // HUD bullshit
 var ep_camera = ClefUtils.makeCamera(true);
-
 var ep_accuracy   = ClefUtils.makeText(16, 350 - 24, "100.00%", 32, "left", true);
 var ep_judgeStats = ClefUtils.makeText(16, 350, "", 16, "left", true);
 var ep_judge      = ClefUtils.makeText(16, 150, "", 24, "center", true);
 var ep_songDetail = ClefUtils.makeText(16, 16, "", 16, "left", true);
-
 var ep_judgeProgress = 0;
-
 var elements:Array<Dynamic> = [ep_accuracy, ep_judgeStats, ep_judge, ep_songDetail];
 
+// Palette bullshit
 var curPaletteIndex:Int = 0;
 var palettesInRotation = [ColorPalettes.getDefault()];
 var currentPalette:Map<String, Int> = null;
 
 function postCreate() {
-    // TODO: implement palette selection
-    // for now this will have to do
     currentPalette = ColorPalettes.getDefault();
 
     if (ClefUtils.tryGetFolderContentFromAllLoadedMods("palettes").length > 0) {
@@ -104,7 +100,6 @@ function postUpdate(delta) {
     }
 
     for (i in player.members) {
-        // next focus prep
         if (FlxG.save.data.epoch_gameplay_override != 1) i.scrollSpeed = FlxG.save.data.epoch_gameplay_override;
     }
 
@@ -162,7 +157,7 @@ function reeval(deviation, isMiss) {
     judgeList[obj.judge]++;
 
     ep_judgeProgress = 0;
-    //prep for the next focus
+
     ep_judge.text = "";
     ep_judge.text += "\n" + obj.judge;
     if (!isMiss) ep_judge.text += "\n" + FlxStringUtil.formatMoney(obj.delta) + "ms";

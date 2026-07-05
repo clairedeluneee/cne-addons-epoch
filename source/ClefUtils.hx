@@ -68,8 +68,9 @@ class ClefUtils {
 	/**
 	* Scans through all loaded mods for a specified file.
 	* Effectively just a glorified `Path.file` but it scans through mods and addons.
+	* @param targetPath The target path.
 	*/
-	public static function tryGetFileFromAllLoadedMods(targetPath):Null<String> {
+	public static function tryGetFileFromAllLoadedMods(targetPath:String):Null<String> {
         for (i in ModsFolder.getLoadedMods(true)) {
             for (j in ["./mods", "./addons", "./assets"]) {
                 try {
@@ -85,8 +86,9 @@ class ClefUtils {
 	/**
 	* Scans through all loaded mods for a folder then returns the folder's content.
 	* Effectively just a glorified `Path.getFolderContent` but it scans through mods and addons.
+	* @param targetPath The target folder.
 	*/
-	public static function tryGetFolderContentFromAllLoadedMods(targetPath):Null<Array<String>> {
+	public static function tryGetFolderContentFromAllLoadedMods(targetPath:String):Null<Array<String>> {
         for (i in ModsFolder.getLoadedMods(true)) {
             for (j in ["./mods", "./addons", "./assets"]) {
                 try {
