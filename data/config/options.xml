@@ -1,6 +1,14 @@
 <menu name="Epoch" desc="Options for Epoch.">
     <menu name="Gameplay" desc="Change how Epoch changes gameplay.">
         <number
+            id="epoch_gameplay_override"
+            name="Scroll Speed"
+            desc="If changed from 1, will set the player's scroll speed to this number."
+            min="1"
+            max="5"
+            change="0.05"
+        />
+        <number
             id="epoch_gameplay_judge"
             name="Judge"
             desc="Which Judge window preset should be used?"

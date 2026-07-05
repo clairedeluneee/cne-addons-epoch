@@ -1,4 +1,5 @@
 function new() {
+    FlxG.save.data.epoch_gameplay_override ??= 1;
     FlxG.save.data.epoch_gameplay_judge ??= 4;
     FlxG.save.data.epoch_gameplay_life  ??= true;
     FlxG.save.data.epoch_gameplay_wife  ??= true;

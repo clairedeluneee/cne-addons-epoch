@@ -94,7 +94,7 @@ function postUpdate(delta) {
 
     for (i in player.members) {
         // next focus prep
-        // i.scrollSpeed = 3.5;
+        if (FlxG.save.data.epoch_gameplay_override != 1) i.scrollSpeed = FlxG.save.data.epoch_gameplay_override;
     }
 
     if (ep_judgeProgress < 1) ep_judgeProgress += delta * 2;
@@ -154,8 +154,8 @@ function reeval(deviation, isMiss) {
     //prep for the next focus
     ep_judge.text = "";
     ep_judge.text += "\n" + obj.judge;
-    ep_judge.text += "\n" + FlxStringUtil.formatMoney(obj.delta) + "ms";
+    if (!isMiss) ep_judge.text += "\n" + FlxStringUtil.formatMoney(obj.delta) + "ms";
     ep_judge.text += "\n" + FlxStringUtil.formatMoney(wifescore / 2 * 100) + "%";
 
-    ep_judge.color = currentPalette["Hits_"+ obj.judge];
+    if (!isMiss) ep_judge.color = currentPalette["Hits_"+ obj.judge];
 }
