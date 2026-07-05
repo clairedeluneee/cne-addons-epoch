@@ -67,7 +67,7 @@ function instantiateOverlay(isRepaint:Bool = false) {
         i.setBorderStyle(Type.resolveEnum("flixel.text.FlxTextBorderStyle").SHADOW, currentPalette["Outline"], 1, 1);
     }
 
-    ep_songDetail.text = (PlayState.SONG.meta.displayName ?? PlayState.SONG.meta.name) + "\nW3 J4 L4";
+    ep_songDetail.text = (PlayState.SONG.meta.displayName ?? PlayState.SONG.meta.name) + "\nW3 J" + FlxG.save.data.epoch_gameplay_judge + " L4";
     ep_songDetail.y = ep_camera.height - 16 - ep_songDetail.height;
 }
 
@@ -81,9 +81,8 @@ function onPlayerHit(e) {
 }
 
 function postUpdate(delta) {
-    // prep for next focus
     for (i in [scoreTxt, missesTxt, accuracyTxt]) {
-        i?.visible = false;
+        if (!FlxG.save.data.epoch_visual_vanillaElements) i?.visible = false;
     }
 
     if (FlxG.keys.justPressed.TAB) {
@@ -112,9 +111,10 @@ function postUpdate(delta) {
     centerpoint = sum / player.members.length;
     ep_judge.x = centerpoint - ep_judge.width / 2;
 
-    health = life / 50;
+    if (FlxG.save.data.epoch_gameplay_life) health = life / 50;
 
     ep_accuracy.text = FlxStringUtil.formatMoney(wife.total == 0 ? 0 : wife.score / wife.total * 100) + "%";
+    if (FlxG.save.data.epoch_gameplay_wife) accuracy = wife.total == 0 ? -1 : wife.score / wife.total;
 
     ep_judgeStats.text = Judge.getClearType(judgeList);
     ep_judgeStats.text += "\n";
@@ -136,7 +136,7 @@ function onPlayerMiss(e) {
 }
 
 function reeval(deviation, isMiss) {
-    var obj:Dynamic = Judge.evaluateHit(Conductor.songPosition - deviation, 4);
+    var obj:Dynamic = Judge.evaluateHit(Conductor.songPosition - deviation, FlxG.save.data.epoch_gameplay_judge);
 
     var wifescore = Wife.getWifescoreAt(Math.abs(Conductor.songPosition - deviation));
 

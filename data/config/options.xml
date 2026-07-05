@@ -1,5 +1,13 @@
 <menu name="Epoch" desc="Options for Epoch.">
     <menu name="Gameplay" desc="Change how Epoch changes gameplay.">
+        <number
+            id="epoch_gameplay_judge"
+            name="Judge"
+            desc="Which Judge window preset should be used?"
+            min="1"
+            max="9"
+            change="1"
+        />
         <checkbox
             id="epoch_gameplay_life"
             name="Life 4 Override"
