@@ -14,4 +14,12 @@ Wife 3 replaces the discrete hit windows with a mathematical formula that punish
 This is known as 'Complex Accuracy' in Kade Engine."
         />
     </menu>
+
+    <menu name="Visual" desc="Change what is shown in the overlay.">
+        <checkbox
+            id="epoch_visual_vanillaElements"
+            name="Vanilla Elements"
+            desc="Should the default score/accuracy/misses texts be shown?"
+        />
+    </menu>
 </menu>
