@@ -74,7 +74,11 @@ function instantiateOverlay(isRepaint:Bool = false) {
         strainAccum += FlxStringUtil.formatMoney(strain) + " ";
     }
 
-    ep_songDetail.text = (PlayState.SONG.meta.displayName ?? PlayState.SONG.meta.name) + " ["+ PlayState.difficulty +"] - " + strainAccum + "\nW3 J" + FlxG.save.data.epoch_gameplay_judge + " L4";
+    var extraInfo:String = " ";
+    if (FlxG.save.data.epoch_gameplay_override != 1) extraInfo += "ScrollOverride(" + FlxG.save.data.epoch_gameplay_override + ") ";
+    if (camHUD.downScroll) extraInfo += "Invert ";
+
+    ep_songDetail.text = (PlayState.SONG.meta.displayName ?? PlayState.SONG.meta.name) + " ["+ PlayState.difficulty +"] - " + strainAccum + "\nW3 J" + FlxG.save.data.epoch_gameplay_judge + " L4" + extraInfo;
     ep_songDetail.y = ep_camera.height - 16 - ep_songDetail.height;
 }
 
