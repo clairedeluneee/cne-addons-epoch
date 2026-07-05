@@ -2,6 +2,7 @@ import source.ClefUtils;
 import source.Judge;
 import source.Wife;
 import source.ColorPalettes;
+import source.Strain;
 
 import flixel.util.FlxStringUtil;
 import flixel.text.FlxTextBorderStyle;
@@ -67,7 +68,17 @@ function instantiateOverlay(isRepaint:Bool = false) {
         i.setBorderStyle(Type.resolveEnum("flixel.text.FlxTextBorderStyle").SHADOW, currentPalette["Outline"], 1, 1);
     }
 
-    ep_songDetail.text = (PlayState.SONG.meta.displayName ?? PlayState.SONG.meta.name) + "\nW3 J" + FlxG.save.data.epoch_gameplay_judge + " L4";
+    var strain:Float = 0;
+    var strainAccum:String = "";
+
+    for (strumline in PlayState.SONG.strumLines) {
+        if (strumline.type != 1) continue;
+
+        strain = Strain.getStrainOfStrumline(strumline).average;
+        strainAccum += FlxStringUtil.formatMoney(strain) + " ";
+    }
+
+    ep_songDetail.text = (PlayState.SONG.meta.displayName ?? PlayState.SONG.meta.name) + " ["+ PlayState.difficulty +"] - " + strainAccum + "\nW3 J" + FlxG.save.data.epoch_gameplay_judge + " L4";
     ep_songDetail.y = ep_camera.height - 16 - ep_songDetail.height;
 }
 
