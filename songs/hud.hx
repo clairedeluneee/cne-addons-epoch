@@ -83,7 +83,7 @@ function instantiateOverlay(isRepaint:Bool = false) {
 }
 
 function onPlayerHit(e) {
-    e.healthGain = 0;
+    if (FlxG.save.data.epoch_gameplay_life) e.healthGain = 0;
     if (e.note.isSustainNote) return;
 
     reeval(e.note.strumTime, false);
