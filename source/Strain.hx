@@ -6,18 +6,18 @@ public class Strain {
 
         var individualStrains:Array<Float> = [];
         var lastNote:Array<Dynamic> = [];
-        for (i in 0...strumline.members.length) {
+        for (i in 0...(strumline?.keyCount ?? 4)) {
             individualStrains.push(0);
             lastNote.push(null);
         }
 
-        for (note in strumline.notes.members) {
+        for (note in strumline.notes) {
             if (lastNote[note.id] == null) {
                 lastNote[note.id] = note;
                 continue;
             }
 
-            individualStrains[note.id] += (1 / Math.abs((note.time - (lastNote[note.id].time + lastNote[note.id].slen))));
+            individualStrains[note.id] += (1 / Math.abs(0.001 * (note.time - (lastNote[note.id].time + lastNote[note.id].slen))));
         }
 
         toReturn.laneStrains = individualStrains;
