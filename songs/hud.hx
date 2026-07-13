@@ -141,8 +141,6 @@ function postUpdate(delta) {
 
 function onPlayerMiss(e) {
     reeval(e.note.strumTime + 10000, true);
-
-    judgeList["Miss"]++;
 }
 
 function reeval(deviation, isMiss) {
