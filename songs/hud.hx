@@ -126,7 +126,7 @@ function postUpdate(delta) {
     ep_accuracy.text = FlxStringUtil.formatMoney(wife.total == 0 ? 0 : wife.score / wife.total * 100) + "%";
     if (FlxG.save.data.epoch_gameplay_wife) accuracy = wife.total == 0 ? -1 : wife.score / wife.total;
 
-    ep_judgeStats.text = Judge.getClearType(judgeList);
+    ep_judgeStats.text = "("+ Judge.getClearType(judgeList) + ") " + Judge.getRatingAtAccuracy((wife.total == 0 ? 0 : wife.score / wife.total) * 100);
     ep_judgeStats.text += "\n";
     ep_judgeStats.text += "\nMA    " + judgeList["Marvelous"];
     ep_judgeStats.text += "\nPR    " + judgeList["Perfect"];
