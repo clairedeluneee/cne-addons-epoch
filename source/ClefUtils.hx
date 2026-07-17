@@ -22,7 +22,7 @@ class ClefUtils {
 	 * @param solid Should this be a solid? This substitutes `makeGraphic` with CNE's `makeSolid` function.
 	 */
 	public static function makeRect(x:Float, y:Float, width:Float, height:Float, color:Int, solid:Bool = false):FlxSprite {
-		if (solid)
+		if (!solid)
 			return new FlxSprite(x, y).makeGraphic(width, height, color);
 
 		return new FlxSprite(x, y).makeSolid(width, height, color);
